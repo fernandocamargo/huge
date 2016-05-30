@@ -1,0 +1,121 @@
+.section.content {
+  margin-top: 60px;
+  transform: translateX(0);
+  transition: transform .25s linear;
+}
+
+.header.active + .section.content {
+  transform: translateX(calc(100% - 72px));
+}
+
+.section.content:after {
+  background-color: $color-black;
+  content: '';
+  display: block;
+  height: calc(100% + 60px);
+  left: 0;
+  opacity: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+.header:not(.active) + .section.content:after {
+  transition: z-index .1s linear, opacity .15s linear;
+}
+
+.header.active + .section.content:after {
+  transition: z-index .2s linear, opacity .15s linear;
+}
+
+.header.active + .section.content:after {
+  opacity: .5;
+  z-index: 1;
+}
+
+.article {
+  padding: 0 calc((100% - 968px) / 2);
+  position: relative;
+}
+
+.article.intro:before {
+  height: 240px;
+}
+
+.article.intro:before {
+  background: center top url("/images/background-image.jpg") no-repeat;
+  background-size: cover;
+  content: '';
+  display: block;
+  width: 100%;
+  z-index: -1;
+}
+
+.article.intro > .title,
+.article.intro .paragraph {
+  margin: 0 24px;
+}
+
+.article.intro > .title {
+  color: $color-black;
+  font: 44px/48px HUGEAvantGardeBold;
+  margin-top: 50px;
+}
+
+.article.intro > .title + .paragraph {
+  margin-top: 60px;
+}
+
+.article.intro .paragraph {
+  color: $color-black;
+  font: 14px/24px Galaxie;
+  margin-bottom: 60px;
+  text-align: justify;
+}
+
+@media only screen and (min-width: 768px) {
+  .header.active + .section.content {
+    transform: none;
+  }
+
+  .section.content {
+    margin-top: 72px;
+  }
+
+  .article.intro:before,
+  .article.intro > .title {
+    height: 640px;
+  }
+
+  .article.intro:before {
+    left: 0;
+    position: absolute;
+    top: 0;
+  }
+
+  .article.intro > .title,
+  .article.intro .paragraph {
+    margin: 0;
+  }
+
+  .article.intro > .title {
+    color: $color-white;
+    display: table-cell;
+    font-size: 120px;
+    line-height: 132px;
+    margin-top: 0;
+    vertical-align: middle;
+    text-align: center;
+  }
+
+  .article.intro > .title + .paragraph {
+    margin-top: 50px;
+  }
+
+  .article.intro .paragraph {
+    font-size: 24px;
+    line-height: 36px;
+    margin-bottom: 50px;
+  }
+}

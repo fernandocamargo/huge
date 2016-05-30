@@ -1,0 +1,325 @@
+.header {
+  background-color: $color-magenta;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 2;
+
+}
+
+.header .item,
+.header .anchor {
+  transition: background-color .15s linear, color .15s linear;
+}
+
+.header .anchor {
+  display: block;
+  text-decoration: none;
+}
+
+.header > .title,
+.header > .title .fragment {
+  display: none;
+}
+
+.header > .title {
+  display: block;
+  left: -100%;
+  position: absolute;
+  top: 24px;
+  transition: left .25s linear, visibility 0s linear;
+  visibility: hidden;
+  z-index: 1;
+}
+
+.header.active > .title {
+  left: 24px;
+  visibility: visible;
+}
+
+.header > .title .anchor {
+  background: url("/images/HUGE.png") no-repeat;
+  background-position: 0 -50px;
+  background-size: 50px auto;
+  height: 20px;
+  overflow: hidden;
+  text-indent: -9999px;
+  width: 50px;
+}
+
+.header > .title .anchor:focus {
+  background-position: 0 -25px;
+}
+
+.header .navigation.sitemap {
+  background-color: $color-white;
+  transform: translateX(-100%);
+  transition: transform .25s linear;
+  width: calc(100% - 72px);
+}
+
+.header.active .navigation.sitemap {
+  transform: translateX(0);
+}
+
+.header .navigation.sitemap > .collection {
+  margin-top: 12px;
+}
+
+.header .navigation.sitemap > .collection > .item > .anchor:hover,
+.header .navigation.sitemap > .collection > .item > .anchor:focus,
+.header .navigation.sitemap > .collection > .item > .anchor:active {
+  background-color: $color-light-gray;
+}
+
+.header .navigation.controls .item.toggle {
+  overflow: hidden;
+}
+
+.header .navigation.controls .item.toggle .anchor {
+  background: center center url($icon-menu-url) no-repeat;
+  background-size: $icon-width $icon-height;
+  display: block;
+  height: 20px;
+  margin: 20px 24px 20px 24px;
+  position: relative;
+  text-indent: -9999px;
+  transition: margin .25s linear;
+  width: 24px;
+}
+
+.header.active .navigation.controls .item.toggle .anchor {
+  background-color: transparent;
+  background-image: url($icon-close-url);
+  margin-left: calc(100% - 48px);
+}
+
+.header .navigation.controls .item.toggle .anchor:after {
+  border: dotted 1px $color-white;
+  content: '';
+  display: none;
+  height: calc(100% + 8px);
+  left: -5px;
+  position: absolute;
+  top: -5px;
+  width: calc(100% + 8px);
+}
+
+.header:not(.active) .navigation.controls .item.toggle .anchor:focus:after,
+.header.active .navigation.controls .item.toggle .anchor:focus:after {
+  display: block;
+}
+
+.header.active .navigation.controls .item.toggle .anchor:before {
+  content: '';
+  cursor: default;
+  display: block;
+  height: 100%;
+  left: 0;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: -1;
+}
+
+.header .navigation.sitemap > .collection > .item > .anchor {
+  align-items: center;
+  color: $color-black;
+  display: flex;
+  font: 21px/48px HUGEAvantGardeBold;
+  height: 100%;
+  padding: 0 24px;
+  position: relative;
+}
+
+.header .navigation.sitemap > .collection > .item > .anchor:after {
+  content: '';
+  display: block;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.header .item {
+  position: relative;
+}
+
+.header .item > .collection {
+  background-color: $color-white;
+  max-height: 0;
+  overflow: hidden;
+  top: 100%;
+  visibility: hidden;
+}
+
+.header .item.active > .collection {
+  max-height: 1000px;
+  transition: max-height .75s linear, visibility 0s linear;
+  visibility: visible;
+}
+
+.header .item > .collection:before {
+  border-style: solid;
+  border-width: 4px 4px 0 0;
+  color: $color-magenta;
+  content: '';
+  display: block;
+  height: 12px;
+  position: absolute;
+  right: 24px;
+  transform: rotate(135deg);
+  transition: transform .25s linear;
+  top: 12px;
+  vertical-align: top;
+  width: 12px;
+}
+
+.header .item.active > .collection:before {
+  transform: rotate(315deg);
+  top: 24px;
+}
+
+.header .item > .collection .item .anchor:hover,
+.header .item > .collection .item .anchor:focus,
+.header .item > .collection .item .anchor:active {
+  background-color: $color-light-gray;
+}
+
+.header .item > .collection .anchor {
+  color: $color-black;
+  font: 16px/48px Galaxie;
+  padding: 0 24px;
+  white-space: nowrap;
+}
+
+.header .item > .collection .item .anchor:hover,
+.header .item > .collection .item .anchor:focus,
+.header .item > .collection .item .anchor:active {
+  color: $color-magenta;
+}
+
+@media only screen and (max-width: 767px) {
+  .header .navigation.sitemap {
+    position: absolute;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .header {
+    cursor: default;
+  }
+
+  .header:before {
+    display: none;
+  }
+
+  .header > .title,
+  .header .navigation.sitemap,
+  .header .navigation.sitemap > .collection > .item {
+    float: left;
+  }
+
+  .header > .title,
+  .header.active > .title {
+    left: auto;
+  }
+
+  .header > .title {
+    margin: 24px 48px 24px 24px;
+    position: relative;
+    top: 0;
+    visibility: visible;
+  }
+
+  .header > .title .anchor {
+    background: url("/images/HUGE.png") no-repeat;
+    background-position: 0 -60px;
+    background-size: 60px auto;
+    height: 24px;
+    overflow: hidden;
+    text-indent: -9999px;
+    width: 60px;
+  }
+
+  .header > .title .anchor:focus {
+    background-position: 0 -30px;
+  }
+
+  .header .navigation.controls .item.toggle .anchor {
+    background: none;
+    cursor: default;
+    display: none;
+    height: 100%;
+    margin: 0;
+    position: fixed;
+    width: 100%;
+    z-index: -1;
+  }
+
+  .header.active .navigation.controls .item.toggle .anchor {
+    background: none;
+    display: block;
+  }
+
+  .header .navigation.sitemap .item > .collection {
+    left: 0;
+    padding: 0;
+    position: absolute;
+  }
+
+  .header .navigation.sitemap .item.active > .collection {
+    padding: 12px 0;
+    transition: max-height .25s linear;
+  }
+
+  .header .navigation.sitemap,
+  .header.active .navigation.sitemap {
+    transform: none;
+  }
+
+  .header .navigation.sitemap {
+    display: block;
+    width: auto;
+  }
+
+  .header .navigation.sitemap > .collection {
+    bottom: 0;
+    display: block;
+    height: 100%;
+    margin-top: 0;
+    position: absolute;
+  }
+
+  .header .item > .collection:before {
+    display: none;
+  }
+
+  .header .navigation.sitemap > .collection > .item {
+    height: 100%;
+    position: relative;
+  }
+
+  .header .navigation.sitemap > .collection > .item.active > .anchor,
+  .header .navigation.sitemap > .collection > .item:not(.active) > .anchor:hover,
+  .header .navigation.sitemap > .collection > .item:not(.active) > .anchor:focus,
+  .header .navigation.sitemap > .collection > .item:not(.active) > .anchor:active {
+    background-color: $color-white;
+  }
+
+  .header .navigation.sitemap > .collection > .item > .anchor {
+    color: $color-white;
+    transform: translateY(-50%);
+    top: 50%;
+  }
+
+  .header .navigation.sitemap > .collection > .item.active > .anchor,
+  .header .navigation.sitemap > .collection > .item > .anchor:hover,
+  .header .navigation.sitemap > .collection > .item > .anchor:focus,
+  .header .navigation.sitemap > .collection > .item > .anchor:active {
+    color: $color-magenta;
+  }
+}
