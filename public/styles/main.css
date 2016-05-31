@@ -221,13 +221,11 @@ legend {
   background-color: #fff;
   max-height: 0;
   overflow: hidden;
-  top: 100%;
-  visibility: hidden; }
+  top: 100%; }
 
 .header .item.active > .collection {
   max-height: 1000px;
-  transition: max-height .75s linear, visibility 0s linear;
-  visibility: visible; }
+  transition: max-height .75s linear; }
 
 .header .item > .collection:before {
   border-style: solid;
@@ -243,6 +241,12 @@ legend {
   top: 12px;
   vertical-align: top;
   width: 12px; }
+
+.header .item > .collection .item {
+  display: none; }
+
+.header .item.active > .collection .item {
+  display: block; }
 
 .header .item.active > .collection:before {
   transform: rotate(315deg);
