@@ -10,6 +10,7 @@ const defaults = {
 }
 const internal = {
 	DOM: {
+		collections: [],
 		items: [],
 		anchors: []
 	}
@@ -20,6 +21,19 @@ const API = {
 	is: {
 		function: function (object) {
 			return (typeof object === 'function')
+		},
+
+		equal: function (comparison) {
+			return (comparison === this)
+		},
+
+		not: function (comparison) {
+			return (comparison !== this)
+		},
+
+		parent: function (stack, comparison) {
+			const parent = (comparison.parentNode === this)
+			return (parent ? comparison : stack)
 		}
 	},
 
@@ -91,48 +105,71 @@ const API = {
 		return (settings.dig || surface.valueOf.bind(surface))
 	},
 
-	nestle: function (multiple, parent, depth) {
+	nestle: function (nodes, parent, depth) {
 		const wrapper = (parent || internal.DOM.wrapper)
-		const markup = this.draw.call(this, 'collection')()
+		const markup = this.draw.call(this, 'collection')(nodes, depth)
 		const collection = this.append.call(this, wrapper, markup)
 		const render = this.render.bind(this, collection, depth)
-		multiple.forEach(render)
+		internal.DOM.collections.push(collection)
+		nodes.forEach(render)
 		return this
 	},
 
-	render: function (parent, depth, data) {
+	sign: function (element, data) {
+		const avoid = this.avoid
+		const identify = settings.identify
+		const executable = this.is.function.call(this, identify)
+		const signature = (executable ? identify.call(this, data) : false)
+		const handler = (signature ? element.classList.add : avoid)
+		handler.call(element.classList, signature)
+		return element
+	},
+
+	render: function (parent, depth, data, index) {
 		const listen = this.listen.bind(this)
+		const sign = this.sign.bind(this)
 		const wrapper = (parent || internal.DOM.wrapper)
-		const markup = this.draw.call(this, 'item')(data)
+		const markup = this.draw.call(this, 'item')(data, depth, index)
 		const item = this.append.call(this, wrapper, markup)
 		const anchor = item.querySelector(settings.selectors.anchors)
-		internal.DOM.items.push(item)
+		internal.DOM.items.push(sign(item, data))
 		internal.DOM.anchors.push(listen(anchor, depth, data))
 		return this.fulfill.call(this, data, item, (depth + 1))
 	},
 
-	not: function (iterator) {
-		return (iterator !== this)
+	separate: function (type, reference) {
+		const avoid = this.avoid.bind(this)
+		const not = this.is.not
+		const all = internal.DOM[type]
+		const executable = this.is.function.call(this, reference)
+		const value = reference.valueOf.bind(reference)
+		const handler = (executable ? reference : value)
+		const itself = handler(all)
+		const siblings = all.filter(not.bind(itself))
+		return {itself, siblings, all}
 	},
 
-	separate: function (type, element) {
-		const not = this.not
-		const all = internal.DOM[type]
-		const itself = element
-		const siblings = all.filter(not.bind(element))
-		return {itself, siblings, all}
+	parent: function (parent, children) {
+		return children.reduce(this.is.parent.bind(parent), false)
+	},
+
+	belong: function (parent) {
+		return this.parent.bind(this, parent)
 	},
 
 	handle: function (anchor, depth, data, event) {
 		const avoid = this.avoid.bind(this)
 		const separate = this.separate.bind(this)
 		const container = this.container.get.call(this)
+		const belong = this.belong.bind(this)
+		const equal = this.is.equal
 		const wrapper = internal.DOM.wrapper
 		const item = anchor.parentNode
 		const items = separate('items', item)
 		const anchors = separate('anchors', anchor)
+		const collections = separate('collections', belong(item))
 		const select = (settings.select[depth] || avoid)
-		const DOM = {container, wrapper, items, anchors}
+		const DOM = {container, wrapper, items, anchors, collections}
 		event.preventDefault()
 		select.call(this, DOM, data)
 		return this

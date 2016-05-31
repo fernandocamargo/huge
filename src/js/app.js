@@ -11,9 +11,17 @@ const selectors = {
 }
 const error = () => console.log(`Something went wrong. API request: ${API}`)
 const draw = {
-	collection: () => `<ul class="collection"></ul>`,
+	collection: (nodes, depth) => {
+		const first = !depth
+		const role = (first ? 'menubar' : 'menu')
+		const hidden = String(!first)
+		return `<ul class="collection" role="${role}" aria-hidden="${hidden}">\
+		</ul>`
+	},
 	item: (item) => {
-		return `<li class="item">\
+		const children = !!(item.items || []).length
+		const popup = String(children)
+		return `<li class="item" role="menuitem" aria-haspopup="${popup}">\
 			<a href="${item.url}" title="${item.label}" class="anchor">\
 				${item.label}\
 			</a>\
@@ -30,6 +38,10 @@ const use = (object) => {
 	const collection = (multiple ? array(object) : [object])
 	return collection
 }
+const hidden = function (element) {	
+	const status = String((this !== undefined) ? this : true)
+	return element.setAttribute('aria-hidden', status)
+}
 const highlight = function (element) {
 	const status = ((this !== undefined) ? this : true)
 	const method = (status ? 'add' : 'remove')
@@ -37,11 +49,14 @@ const highlight = function (element) {
 }
 const focus = function () {
 	use(this.container).forEach(highlight)
+	use(this.collections.itself).forEach(hidden.bind(false))
+	use(this.collections.siblings).slice(1).forEach(hidden)
 	use(this.items.itself).forEach(highlight)
 	use(this.items.siblings).forEach(highlight.bind(false))
 	return this
 }
 const toggle = (DOM) => {
+	use(DOM.collections).slice(1).forEach(hidden)
 	use(DOM.items).forEach(highlight.bind(false))
 	DOM.container.classList.toggle(CSS.active)
 	return this
@@ -62,8 +77,9 @@ const select = {
 }
 const serialize = response => response.json()
 const dig = item => item.items
+const identify = data => data.url.split('/').slice().reverse().shift()
 const container = document.getElementsByClassName('header').item(0)
-const settings = {container, selectors, dig, draw, select, toggle}
+const settings = {container, selectors, dig, draw, select, toggle, identify}
 const promise = window.fetch(API).then(serialize).catch(error)
 const menu = navigation.init(settings).populate(promise)
 
